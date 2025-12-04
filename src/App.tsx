@@ -1,18 +1,18 @@
-import React from 'react';
-import { useGamepadNavigation } from '@/lib/gaming-ui-a11y-toolkit';
-import '@/lib/gaming-ui-a11y-toolkit/style.css';
+import React from "react";
+import { useGamepadNavigation } from "gaming-ui-a11y-toolkit";
+import "gaming-ui-a11y-toolkit/style.css";
 
-import { GameState } from '@enums/GameState.enum';
-import { MAX_COMBATS } from '@shared/constants/cards';
-import { useGameState } from '@core/hooks/useGameState';
+import { GameState } from "@enums/GameState.enum";
+import { MAX_COMBATS } from "@shared/constants/cards";
+import { useGameState } from "@core/hooks/useGameState";
 
-import { MainMenu } from '@features/menu/components/MainMenu';
-import { CombatScreen } from '@features/combat/components/CombatScreen';
-import { RewardScreen } from '@features/reward/components/RewardScreen';
-import { GameOverScreen } from '@features/gameOver/components/GameOverScreen';
+import { MainMenu } from "@features/menu/components/MainMenu";
+import { CombatScreen } from "@features/combat/components/CombatScreen";
+import { RewardScreen } from "@features/reward/components/RewardScreen";
+import { GameOverScreen } from "@features/gameOver/components/GameOverScreen";
 
-import '@styles/globals.scss';
-import styles from './App.module.scss';
+import "@styles/globals.scss";
+import styles from "./App.module.scss";
 
 /**
  * Main application component

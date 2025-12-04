@@ -1,7 +1,7 @@
-import React from 'react';
-import { GameMenu } from '@/lib/gaming-ui-a11y-toolkit';
-import type { MenuItem } from '@/types/game.types';
-import styles from './MainMenu.module.scss';
+import React from "react";
+import { GameMenu } from "gaming-ui-a11y-toolkit";
+import type { MenuItem } from "@/types/game.types";
+import styles from "./MainMenu.module.scss";
 
 interface MainMenuProps {
   startNewRun: () => void;
@@ -13,16 +13,16 @@ interface MainMenuProps {
 export const MainMenu: React.FC<MainMenuProps> = ({ startNewRun }) => {
   const menuItems: MenuItem[] = [
     {
-      id: 'play',
-      label: 'Commencer une Partie',
-      icon: '🎮',
+      id: "play",
+      label: "Commencer une Partie",
+      icon: "🎮",
       onSelect: startNewRun,
     },
     {
-      id: 'quit',
-      label: 'Quitter le Jeu',
-      icon: '🚪',
-      onSelect: () => console.log('Fermeture du jeu (Simulé)...'),
+      id: "quit",
+      label: "Quitter le Jeu",
+      icon: "🚪",
+      onSelect: () => console.log("Fermeture du jeu (Simulé)..."),
     },
   ];
 

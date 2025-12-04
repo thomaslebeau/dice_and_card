@@ -1,6 +1,6 @@
-@use '@styles/variables/colors' as *;
-@use '@styles/variables/spacing' as *;
-@use '@styles/animations/dice' as *;
+@use "@styles/variables/colors" as *;
+@use "@styles/variables/spacing" as *;
+@use "@styles/animations/dice" as *;
 
 .diceDisplay {
   display: flex;
@@ -34,7 +34,6 @@
   border-radius: $radius-lg;
   border: $border-width-medium solid;
   box-shadow: $shadow-md;
-  @include dice-animation(2s);
 }
 
 .playerDice {
