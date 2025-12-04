@@ -1,5 +1,6 @@
 import React from 'react';
 import type { DiceDisplayProps } from '@/types/combat.types';
+import { RollingDice } from '../RollingDice/RollingDice';
 import styles from './DiceDisplay.module.scss';
 
 /**
@@ -13,15 +14,19 @@ export const DiceDisplay: React.FC<DiceDisplayProps> = ({ results, diceKey }) =>
         <div className={styles.diceGroup}>
           <div className={styles.diceContainer}>
             <div className={styles.diceLabel}>🗡️ Attaque</div>
-            <div className={`${styles.dice} ${styles.playerDice}`}>
-              {results.playerAttack}
-            </div>
+            <RollingDice
+              finalValue={results.playerAttack}
+              isPlayer={true}
+              diceKey={`player-attack-${diceKey}`}
+            />
           </div>
           <div className={styles.diceContainer}>
             <div className={styles.diceLabel}>🛡️ Défense</div>
-            <div className={`${styles.dice} ${styles.playerDice}`}>
-              {results.playerDefense}
-            </div>
+            <RollingDice
+              finalValue={results.playerDefense}
+              isPlayer={true}
+              diceKey={`player-defense-${diceKey}`}
+            />
           </div>
         </div>
       </div>
@@ -31,15 +36,19 @@ export const DiceDisplay: React.FC<DiceDisplayProps> = ({ results, diceKey }) =>
         <div className={styles.diceGroup}>
           <div className={styles.diceContainer}>
             <div className={styles.diceLabel}>🗡️ Attaque</div>
-            <div className={`${styles.dice} ${styles.enemyDice}`}>
-              {results.enemyAttack}
-            </div>
+            <RollingDice
+              finalValue={results.enemyAttack}
+              isPlayer={false}
+              diceKey={`enemy-attack-${diceKey}`}
+            />
           </div>
           <div className={styles.diceContainer}>
             <div className={styles.diceLabel}>🛡️ Défense</div>
-            <div className={`${styles.dice} ${styles.enemyDice}`}>
-              {results.enemyDefense}
-            </div>
+            <RollingDice
+              finalValue={results.enemyDefense}
+              isPlayer={false}
+              diceKey={`enemy-defense-${diceKey}`}
+            />
           </div>
         </div>
       </div>

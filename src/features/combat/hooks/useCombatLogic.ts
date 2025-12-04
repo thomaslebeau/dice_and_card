@@ -27,11 +27,11 @@ export const useCombatLogic = ({
   const [currentPlayerCard, setCurrentPlayerCard] = useState(playerCard);
   const [currentEnemyCard, setCurrentEnemyCard] = useState(enemyCard);
 
-  // Show results after dice animation
+  // Show results after dice animation (2100ms to match rolling animation duration)
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowResults(true);
-    }, 2000);
+    }, 2100);
     return () => clearTimeout(timer);
   }, [diceKey]);
 
