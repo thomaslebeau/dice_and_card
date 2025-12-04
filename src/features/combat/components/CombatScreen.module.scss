@@ -1,0 +1,84 @@
+@use '@styles/variables/colors' as *;
+@use '@styles/variables/spacing' as *;
+@use '@styles/mixins/effects' as *;
+
+.container {
+  @include glass-container;
+  padding: $spacing-xl $spacing-xxl;
+  min-width: 300px;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.header {
+  margin-bottom: $spacing-lg;
+}
+
+.cardsContainer {
+  display: flex;
+  justify-content: space-around;
+  margin: $spacing-lg 0;
+  gap: $spacing-lg;
+  flex-wrap: wrap;
+}
+
+.combatResults {
+  margin: $spacing-lg 0;
+  padding: $spacing-lg;
+  background: $color-overlay-bg;
+  border-radius: $radius-md;
+  border: $border-width-thin solid $color-focus;
+}
+
+.playerResults {
+  display: flex;
+  justify-content: space-around;
+  margin: $spacing-md 0;
+  gap: $spacing-lg;
+  flex-wrap: wrap;
+}
+
+.playerSection {
+  flex: 1;
+  padding: $spacing-sm;
+  border-radius: $radius-sm;
+  margin: 0 $spacing-sm;
+  min-width: 200px;
+
+  &.player {
+    background: rgba(65, 105, 225, 0.2);
+    border: $border-width-thin solid $color-player;
+  }
+
+  &.ia {
+    background: rgba(255, 99, 71, 0.2);
+    border: $border-width-thin solid $color-enemy;
+  }
+}
+
+.diceResult {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin: $spacing-xs 0;
+}
+
+.damageText {
+  margin-top: $spacing-sm;
+  font-size: 1.2em;
+}
+
+.buttonContainer {
+  margin-top: $spacing-lg;
+}
+
+.nextRoundButton {
+  @include gaming-button($color-primary);
+  padding: $spacing-md $spacing-xl;
+  font-size: 1.2em;
+}
+
+.finalResult {
+  margin-top: $spacing-lg;
+  font-size: 1.5em;
+  font-weight: bold;
+}
