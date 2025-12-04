@@ -1,18 +1,20 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import path from 'path'
+import { resolve } from 'path'
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   resolve: {
+    // Force l'utilisation d'une seule instance de React
+    dedupe: ['react', 'react-dom', 'react/jsx-runtime'],
     alias: {
-      '@': path.resolve(__dirname, './src'),
-      '@enums': path.resolve(__dirname, './src/enums'),
-      '@shared': path.resolve(__dirname, './src/shared'),
-      '@features': path.resolve(__dirname, './src/features'),
-      '@core': path.resolve(__dirname, './src/core'),
-      '@styles': path.resolve(__dirname, './src/styles'),
-    },
+      '@': resolve(__dirname, './src'),
+      '@types': resolve(__dirname, './src/types'),
+      '@enums': resolve(__dirname, './src/enums'),
+      '@shared': resolve(__dirname, './src/shared'),
+      '@features': resolve(__dirname, './src/features'),
+      '@core': resolve(__dirname, './src/core'),
+      '@styles': resolve(__dirname, './src/styles'),
+    }
   },
 })

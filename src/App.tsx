@@ -36,7 +36,7 @@ const App: React.FC = () => {
 
   return (
     <div className={styles.gameScreen}>
-      <h1 className={styles.title}>🎲 Dices and Cards 🃏</h1>
+      <h1 className={styles.title}>Dice and Card</h1>
 
       {isGamepadConnected && (
         <p className={styles.gamepadStatus}>🎮 Manette connectée et prête !</p>

@@ -29,7 +29,8 @@
 }
 
 .rolling {
-  animation: diceShake 0.1s infinite;
+  opacity: 0.5;
+  // animation: diceShake 0.1s infinite;
 }
 
 .stopped {
@@ -47,7 +48,8 @@
 
 // Animation de "shake" pendant le défilement
 @keyframes diceShake {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateX(0);
   }
   25% {

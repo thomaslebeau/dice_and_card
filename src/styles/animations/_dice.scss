@@ -26,7 +26,8 @@
 
 // Animation de "shake" pendant le défilement
 @keyframes diceShake {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateX(0);
   }
   25% {
@@ -52,9 +53,9 @@
   }
 }
 
-@mixin dice-rolling-animation {
-  animation: diceShake 0.1s infinite;
-}
+// @mixin dice-rolling-animation {
+//   animation: diceShake 0.1s infinite;
+// }
 
 @mixin dice-stop-animation {
   animation: diceStopPulse 0.3s ease-out;
