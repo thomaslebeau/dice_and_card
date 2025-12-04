@@ -1,0 +1,204 @@
+@use '@styles/variables/colors' as *;
+@use '@styles/variables/spacing' as *;
+
+.deckSelection {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background: rgba(30, 30, 30, 0.9);
+    border-bottom: 2px solid $color-focus;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+
+    .menuButton,
+    .startButton {
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      border: 2px solid $color-focus;
+      border-radius: 8px;
+      background: rgba(0, 255, 255, 0.1);
+      color: $color-focus;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: rgba(0, 255, 255, 0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
+
+    .startButton {
+      &.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        border-color: rgba(255, 255, 255, 0.3);
+        color: rgba(255, 255, 255, 0.5);
+
+        &:hover {
+          background: rgba(0, 255, 255, 0.1);
+          transform: none;
+          box-shadow: none;
+        }
+      }
+    }
+
+    .title {
+      font-size: 2rem;
+      color: $color-focus;
+      text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+      margin: 0;
+    }
+  }
+
+  .counter {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 30px 0 10px;
+    color: $color-focus;
+    text-align: center;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  }
+
+  .instructions {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .cardsContainer {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0 40px 40px;
+    flex-wrap: wrap;
+    flex: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .selectableCard {
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0.7;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 8px;
+    background: rgba(20, 20, 40, 0.8);
+    backdrop-filter: blur(10px);
+
+    &:hover {
+      opacity: 0.9;
+      transform: translateY(-3px);
+    }
+
+    &.selected {
+      opacity: 1;
+      transform: translateY(-5px);
+      box-shadow: 0 8px 30px rgba(0, 255, 255, 0.4);
+      border-width: 4px;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        border-radius: 12px;
+        background: inherit;
+        filter: blur(10px);
+        opacity: 0.5;
+        z-index: -1;
+      }
+    }
+
+    &.focused {
+      outline: 3px solid $color-focus;
+      outline-offset: 3px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: -6px;
+        left: -6px;
+        right: -6px;
+        bottom: -6px;
+        border-radius: 15px;
+        background: radial-gradient(circle, rgba(0, 255, 255, 0.2) 0%, transparent 70%);
+        z-index: -1;
+        animation: pulse 2s ease-in-out infinite;
+      }
+    }
+  }
+
+  .selectedIndicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    background: $color-focus;
+    color: #000;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0, 255, 255, 0.6);
+    animation: checkmark-appear 0.3s ease-out;
+  }
+
+  .hints {
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    text-align: center;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+    p {
+      margin: 5px 0;
+    }
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes checkmark-appear {
+  0% {
+    transform: scale(0) rotate(-45deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2) rotate(10deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
