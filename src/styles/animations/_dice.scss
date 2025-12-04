@@ -1,0 +1,21 @@
+/**
+ * Dice roll animation
+ */
+
+@keyframes diceRoll {
+  0% {
+    transform: rotate(0deg) scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: rotate(720deg) scale(1.2);
+  }
+  100% {
+    transform: rotate(720deg) scale(1);
+    opacity: 1;
+  }
+}
+
+@mixin dice-animation($duration: 2s) {
+  animation: diceRoll $duration ease-out;
+}

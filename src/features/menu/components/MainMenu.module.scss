@@ -1,0 +1,16 @@
+@use '@styles/variables/colors' as *;
+@use '@styles/variables/spacing' as *;
+@use '@styles/mixins/effects' as *;
+
+.container {
+  @include glass-container;
+  padding: $spacing-xl $spacing-xxl;
+  min-width: 300px;
+  max-width: 800px;
+}
+
+.footer {
+  margin-top: $spacing-lg;
+  font-size: 0.8em;
+  opacity: 0.7;
+}

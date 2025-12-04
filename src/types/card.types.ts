@@ -1,0 +1,36 @@
+import type { Rarity } from '@enums/Rarity.enum';
+
+/**
+ * Base card structure from database
+ */
+export interface CardBase {
+  id: number;
+  name: string;
+  rarity: Rarity;
+  maxHp: number;
+  attackMod: number;
+  defenseMod: number;
+  description: string;
+}
+
+/**
+ * Card instance in game (with current HP)
+ */
+export interface Card extends CardBase {
+  currentHp: number;
+}
+
+/**
+ * Enemy card with boss flag
+ */
+export interface EnemyCard extends Card {
+  isBoss?: boolean;
+}
+
+/**
+ * Card display component props
+ */
+export interface CardDisplayProps {
+  card: Card;
+  isPlayer?: boolean;
+}
