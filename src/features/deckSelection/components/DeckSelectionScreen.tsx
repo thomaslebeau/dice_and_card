@@ -1,11 +1,11 @@
-import React, { useCallback } from 'react';
-import { useFocusable } from 'gaming-ui-a11y-toolkit';
-import type { DeckSelectionScreenProps } from './DeckSelectionScreen.types';
-import { useDeckSelection } from '../hooks/useDeckSelection';
-import { CardDisplay } from '@shared/components/CardDisplay/CardDisplay';
-import { RARITY_COLORS } from '@shared/constants/cards';
-import type { Card } from '@/types/card.types';
-import styles from './DeckSelectionScreen.module.scss';
+import React, { useCallback } from "react";
+import { useFocusable } from "gaming-ui-a11y-toolkit";
+import type { DeckSelectionScreenProps } from "./DeckSelectionScreen.types";
+import { useDeckSelection } from "../hooks/useDeckSelection";
+import { CardDisplay } from "@shared/components/CardDisplay/CardDisplay";
+import { RARITY_COLORS } from "@shared/constants/cards";
+import type { Card } from "@/types/card.types";
+import styles from "./DeckSelectionScreen.module.scss";
 
 export const DeckSelectionScreen: React.FC<DeckSelectionScreenProps> = ({
   onDeckConfirmed,
@@ -27,7 +27,7 @@ export const DeckSelectionScreen: React.FC<DeckSelectionScreenProps> = ({
 
   // Bouton Menu (header gauche)
   const menuButton = useFocusable({
-    id: 'deck-menu-button',
+    id: "deck-menu-button",
     onActivate: onBackToMenu,
     autoFocus: true, // Focus initial
     priority: 100,
@@ -35,7 +35,7 @@ export const DeckSelectionScreen: React.FC<DeckSelectionScreenProps> = ({
 
   // Bouton Start Combat (header droite)
   const startCombatButton = useFocusable({
-    id: 'deck-start-button',
+    id: "deck-start-button",
     onActivate: handleStartCombat,
     disabled: !canStartCombat,
     priority: 100,
@@ -49,7 +49,7 @@ export const DeckSelectionScreen: React.FC<DeckSelectionScreenProps> = ({
           {...menuButton.focusProps}
           onClick={onBackToMenu}
           className={`${styles.menuButton} ${
-            menuButton.isFocused ? styles.focused : ''
+            menuButton.isFocused ? styles.focused : ""
           }`}
           aria-label="Retour au menu"
         >
@@ -62,8 +62,8 @@ export const DeckSelectionScreen: React.FC<DeckSelectionScreenProps> = ({
           {...startCombatButton.focusProps}
           onClick={handleStartCombat}
           className={`${styles.startButton} ${
-            !canStartCombat ? styles.disabled : ''
-          } ${startCombatButton.isFocused ? styles.focused : ''}`}
+            !canStartCombat ? styles.disabled : ""
+          } ${startCombatButton.isFocused ? styles.focused : ""}`}
           disabled={!canStartCombat}
           aria-label="Commencer le combat"
         >
@@ -124,8 +124,8 @@ const SelectableCard: React.FC<SelectableCardProps> = ({
 }) => {
   const cardFocus = useFocusable({
     id: `deck-card-${card.id}`,
-    group: 'deck-cards',
-    onActivate: onToggle,
+    group: "deck-cards",
+    onActivate: () => onToggle,
   });
 
   const rarityColor = RARITY_COLORS[card.rarity];
@@ -135,13 +135,15 @@ const SelectableCard: React.FC<SelectableCardProps> = ({
       {...cardFocus.focusProps}
       onClick={onToggle}
       className={`${styles.selectableCard} ${
-        isSelected ? styles.selected : ''
-      } ${cardFocus.isFocused ? styles.focused : ''}`}
+        isSelected ? styles.selected : ""
+      } ${cardFocus.isFocused ? styles.focused : ""}`}
       style={{
-        borderColor: isSelected ? rarityColor : 'rgba(255, 255, 255, 0.2)',
+        borderColor: isSelected ? rarityColor : "rgba(255, 255, 255, 0.2)",
       }}
       aria-pressed={isSelected}
-      aria-label={`${card.name}, ${isSelected ? 'sélectionnée' : 'non sélectionnée'}`}
+      aria-label={`${card.name}, ${
+        isSelected ? "sélectionnée" : "non sélectionnée"
+      }`}
     >
       <CardDisplay card={card} />
 
@@ -153,7 +155,10 @@ const SelectableCard: React.FC<SelectableCardProps> = ({
       )}
 
       {/* Badge de rareté */}
-      <div className={styles.rarityBadge} style={{ backgroundColor: rarityColor }}>
+      <div
+        className={styles.rarityBadge}
+        style={{ backgroundColor: rarityColor }}
+      >
         {card.rarity}
       </div>
     </div>
