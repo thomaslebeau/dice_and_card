@@ -10,7 +10,9 @@ export interface UseGameStateReturn {
   currentCombat: number;
   playerCard: Card | null;
   enemyCard: EnemyCard | null;
+  playerDeck: Card[];
   startNewRun: () => void;
+  handleDeckConfirmed: (selectedCards: Card[]) => void;
   handleCombatEnd: (result: CombatEndResult) => void;
   handleCardSelected: (newCard: Card) => void;
   handleBackToMenu: () => void;

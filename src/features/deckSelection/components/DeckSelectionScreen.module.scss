@@ -1,0 +1,240 @@
+@import '@styles/variables/colors';
+@import '@styles/variables/spacing';
+@import '@styles/mixins/focus';
+
+.deckSelection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg, 24px);
+  padding: var(--spacing-lg, 24px);
+  min-height: 100vh;
+}
+
+// ==================
+// Header
+// ==================
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-md, 16px);
+  padding: var(--spacing-md, 16px) var(--spacing-lg, 24px);
+  background: rgba(30, 30, 30, 0.95);
+  border-radius: 12px;
+  border: 2px solid rgba(0, 255, 255, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.title {
+  flex: 1;
+  text-align: center;
+  font-size: 1.8em;
+  font-weight: bold;
+  color: var(--color-focus, #00FFFF);
+  margin: 0;
+}
+
+.menuButton,
+.startButton {
+  padding: 12px 24px;
+  font-size: 1.1em;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: rgba(50, 50, 50, 0.8);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: rgba(0, 255, 255, 0.6);
+  }
+
+  &.focused {
+    border-color: var(--color-focus, #00FFFF);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    transform: scale(1.05);
+  }
+}
+
+.startButton {
+  background: linear-gradient(135deg, #00C853 0%, #00E676 100%);
+  border-color: #00E676;
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: rgba(100, 100, 100, 0.5);
+
+    &:hover {
+      transform: none;
+    }
+  }
+
+  &:not(.disabled):hover {
+    background: linear-gradient(135deg, #00E676 0%, #00FF88 100%);
+  }
+}
+
+// ==================
+// Counter
+// ==================
+
+.counter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-md, 16px);
+  padding: var(--spacing-md, 16px);
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+}
+
+.counterText {
+  font-size: 1.4em;
+  font-weight: bold;
+  color: var(--color-focus, #00FFFF);
+}
+
+.counterReady {
+  font-size: 1.2em;
+  color: #00E676;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+// ==================
+// Instructions
+// ==================
+
+.instructions {
+  text-align: center;
+  font-size: 1.2em;
+  color: rgba(255, 255, 255, 0.8);
+  padding: var(--spacing-sm, 8px);
+}
+
+// ==================
+// Cards Container
+// ==================
+
+.cardsContainer {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-lg, 24px);
+  flex-wrap: wrap;
+  padding: var(--spacing-lg, 24px);
+}
+
+.selectableCard {
+  position: relative;
+  width: 200px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  background: rgba(40, 40, 40, 0.9);
+  padding: var(--spacing-sm, 8px);
+  opacity: 0.7;
+
+  &:hover {
+    opacity: 0.9;
+    transform: translateY(-5px);
+  }
+
+  // État sélectionné
+  &.selected {
+    opacity: 1;
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 8px 30px rgba(0, 255, 255, 0.4);
+    animation: selectedPulse 2s infinite;
+  }
+
+  // État focusé (navigation)
+  &.focused {
+    outline: 3px solid var(--color-focus, #00FFFF);
+    outline-offset: 3px;
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.6);
+    z-index: 10;
+  }
+
+  // Selected + Focused
+  &.selected.focused {
+    box-shadow: 0 8px 40px rgba(0, 255, 255, 0.7);
+  }
+}
+
+@keyframes selectedPulse {
+  0%, 100% {
+    box-shadow: 0 8px 30px rgba(0, 255, 255, 0.4);
+  }
+  50% {
+    box-shadow: 0 8px 40px rgba(0, 255, 255, 0.6);
+  }
+}
+
+// ==================
+// Selection Indicator
+// ==================
+
+.selectedIndicator {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #00E676 0%, #00C853 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 230, 118, 0.5);
+  z-index: 5;
+}
+
+.checkmark {
+  font-size: 1.5em;
+  color: white;
+  font-weight: bold;
+}
+
+// ==================
+// Rarity Badge
+// ==================
+
+.rarityBadge {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.8em;
+  font-weight: bold;
+  color: white;
+  text-transform: uppercase;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+// ==================
+// Hints
+// ==================
+
+.hints {
+  text-align: center;
+  padding: var(--spacing-md, 16px);
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  margin-top: auto;
+
+  p {
+    margin: var(--spacing-xs, 4px) 0;
+    font-size: 0.95em;
+    color: rgba(255, 255, 255, 0.7);
+  }
+}

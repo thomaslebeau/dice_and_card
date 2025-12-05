@@ -7,6 +7,7 @@ import { MAX_COMBATS } from "@shared/constants/cards";
 import { useGameState } from "@core/hooks/useGameState";
 
 import { MainMenu } from "@features/menu/components/MainMenu";
+import { DeckSelectionScreen } from "@features/deckSelection/components/DeckSelectionScreen";
 import { CombatScreen } from "@features/combat/components/CombatScreen";
 import { RewardScreen } from "@features/reward/components/RewardScreen";
 import { GameOverScreen } from "@features/gameOver/components/GameOverScreen";
@@ -25,6 +26,7 @@ const App: React.FC = () => {
     playerCard,
     enemyCard,
     startNewRun,
+    handleDeckConfirmed,
     handleCombatEnd,
     handleCardSelected,
     handleBackToMenu,
@@ -41,6 +43,13 @@ const App: React.FC = () => {
         <h1 className={styles.title}>Dice and Card</h1>
 
         {gameState === GameState.MENU && <MainMenu startNewRun={startNewRun} />}
+
+        {gameState === GameState.DECK_SELECTION && (
+          <DeckSelectionScreen
+            onDeckConfirmed={handleDeckConfirmed}
+            onBackToMenu={handleBackToMenu}
+          />
+        )}
 
         {gameState === GameState.COMBAT && playerCard && enemyCard && (
           <CombatScreen
