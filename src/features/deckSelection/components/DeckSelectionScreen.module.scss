@@ -1,12 +1,12 @@
-@import '@styles/variables/colors';
-@import '@styles/variables/spacing';
-@import '@styles/mixins/focus';
+@use '@styles/variables/colors' as *;
+@use '@styles/variables/spacing' as *;
+@use '@styles/mixins/effects' as *;
 
 .deckSelection {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-lg, 24px);
-  padding: var(--spacing-lg, 24px);
+  gap: $spacing-lg;
+  padding: $spacing-lg;
   min-height: 100vh;
 }
 
@@ -18,12 +18,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: var(--spacing-md, 16px);
-  padding: var(--spacing-md, 16px) var(--spacing-lg, 24px);
-  background: rgba(30, 30, 30, 0.95);
-  border-radius: 12px;
-  border: 2px solid rgba(0, 255, 255, 0.3);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  gap: $spacing-md;
+  padding: $spacing-md $spacing-lg;
+  background: $color-container-bg;
+  border-radius: $radius-lg;
+  border: $border-width-thin solid rgba(0, 255, 255, 0.3);
+  box-shadow: $shadow-lg;
 }
 
 .title {
@@ -31,7 +31,7 @@
   text-align: center;
   font-size: 1.8em;
   font-weight: bold;
-  color: var(--color-focus, #00FFFF);
+  color: $color-focus;
   margin: 0;
 }
 
@@ -40,10 +40,10 @@
   padding: 12px 24px;
   font-size: 1.1em;
   font-weight: 600;
-  border-radius: 8px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  background: rgba(50, 50, 50, 0.8);
-  color: white;
+  border-radius: $radius-md;
+  border: $border-width-thin solid rgba(255, 255, 255, 0.3);
+  background: $color-overlay-bg;
+  color: $color-text;
   cursor: pointer;
   transition: all 0.3s ease;
 
@@ -53,8 +53,8 @@
   }
 
   &.focused {
-    border-color: var(--color-focus, #00FFFF);
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    border-color: $color-focus;
+    box-shadow: $shadow-glow;
     transform: scale(1.05);
   }
 }
@@ -86,16 +86,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: var(--spacing-md, 16px);
-  padding: var(--spacing-md, 16px);
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 8px;
+  gap: $spacing-md;
+  padding: $spacing-md;
+  background: $color-dark-overlay;
+  border-radius: $radius-md;
 }
 
 .counterText {
   font-size: 1.4em;
   font-weight: bold;
-  color: var(--color-focus, #00FFFF);
+  color: $color-focus;
 }
 
 .counterReady {
@@ -117,7 +117,7 @@
   text-align: center;
   font-size: 1.2em;
   color: rgba(255, 255, 255, 0.8);
-  padding: var(--spacing-sm, 8px);
+  padding: $spacing-sm;
 }
 
 // ==================
@@ -127,9 +127,9 @@
 .cardsContainer {
   display: flex;
   justify-content: center;
-  gap: var(--spacing-lg, 24px);
+  gap: $spacing-lg;
   flex-wrap: wrap;
-  padding: var(--spacing-lg, 24px);
+  padding: $spacing-lg;
 }
 
 .selectableCard {
@@ -137,10 +137,10 @@
   width: 200px;
   cursor: pointer;
   transition: all 0.3s ease;
-  border: 3px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  background: rgba(40, 40, 40, 0.9);
-  padding: var(--spacing-sm, 8px);
+  border: $border-width-medium solid rgba(255, 255, 255, 0.2);
+  border-radius: $radius-lg;
+  background: $color-card-bg;
+  padding: $spacing-sm;
   opacity: 0.7;
 
   &:hover {
@@ -158,7 +158,7 @@
 
   // État focusé (navigation)
   &.focused {
-    outline: 3px solid var(--color-focus, #00FFFF);
+    outline: $border-width-medium solid $color-focus;
     outline-offset: 3px;
     box-shadow: 0 0 25px rgba(0, 255, 255, 0.6);
     z-index: 10;
@@ -213,12 +213,12 @@
   bottom: 10px;
   right: 10px;
   padding: 4px 12px;
-  border-radius: 6px;
+  border-radius: $radius-sm;
   font-size: 0.8em;
   font-weight: bold;
   color: white;
   text-transform: uppercase;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  box-shadow: $shadow-sm;
 }
 
 // ==================
@@ -227,13 +227,13 @@
 
 .hints {
   text-align: center;
-  padding: var(--spacing-md, 16px);
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 8px;
+  padding: $spacing-md;
+  background: $color-dark-overlay;
+  border-radius: $radius-md;
   margin-top: auto;
 
   p {
-    margin: var(--spacing-xs, 4px) 0;
+    margin: $spacing-xs 0;
     font-size: 0.95em;
     color: rgba(255, 255, 255, 0.7);
   }
