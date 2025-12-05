@@ -67,14 +67,20 @@
   font-size: 1.2em;
 }
 
-.buttonContainer {
-  margin-top: $spacing-lg;
-}
-
 .nextRoundButton {
   @include gaming-button($color-primary);
   padding: $spacing-md $spacing-xl;
   font-size: 1.2em;
+  margin-top: $spacing-lg;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &.focused {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    outline: 3px solid $color-focus;
+    outline-offset: 3px;
+  }
 }
 
 .finalResult {

@@ -1,5 +1,5 @@
 import React from "react";
-import { useGamepadNavigation } from "gaming-ui-a11y-toolkit";
+import { FocusProvider } from "gaming-ui-a11y-toolkit";
 import "gaming-ui-a11y-toolkit/style.css";
 
 import { GameState } from "@enums/GameState.enum";
@@ -30,44 +30,43 @@ const App: React.FC = () => {
     handleBackToMenu,
   } = useGameState();
 
-  const { isGamepadConnected } = useGamepadNavigation({
-    itemCount: 0,
-  });
-
   return (
-    <div className={styles.gameScreen}>
-      <h1 className={styles.title}>Dice and Card</h1>
+    <FocusProvider
+      enableHapticFeedback={true}
+      navigationMode="spatial"
+      joystickDeadzone={0.5}
+      navigationDelay={150}
+    >
+      <div className={styles.gameScreen}>
+        <h1 className={styles.title}>Dice and Card</h1>
 
-      {isGamepadConnected && (
-        <p className={styles.gamepadStatus}>🎮 Manette connectée et prête !</p>
-      )}
+        {gameState === GameState.MENU && <MainMenu startNewRun={startNewRun} />}
 
-      {gameState === GameState.MENU && <MainMenu startNewRun={startNewRun} />}
+        {gameState === GameState.COMBAT && playerCard && enemyCard && (
+          <CombatScreen
+            playerCard={playerCard}
+            enemyCard={enemyCard}
+            onCombatEnd={handleCombatEnd}
+            combatNumber={currentCombat}
+          />
+        )}
 
-      {gameState === GameState.COMBAT && playerCard && enemyCard && (
-        <CombatScreen
-          playerCard={playerCard}
-          enemyCard={enemyCard}
-          onCombatEnd={handleCombatEnd}
-          combatNumber={currentCombat}
-        />
-      )}
+        {gameState === GameState.REWARD && (
+          <RewardScreen
+            onCardSelected={handleCardSelected}
+            combatNumber={currentCombat}
+          />
+        )}
 
-      {gameState === GameState.REWARD && (
-        <RewardScreen
-          onCardSelected={handleCardSelected}
-          combatNumber={currentCombat}
-        />
-      )}
-
-      {gameState === GameState.GAMEOVER && (
-        <GameOverScreen
-          victory={currentCombat > MAX_COMBATS}
-          combatNumber={currentCombat}
-          onBackToMenu={handleBackToMenu}
-        />
-      )}
-    </div>
+        {gameState === GameState.GAMEOVER && (
+          <GameOverScreen
+            victory={currentCombat > MAX_COMBATS}
+            combatNumber={currentCombat}
+            onBackToMenu={handleBackToMenu}
+          />
+        )}
+      </div>
+    </FocusProvider>
   );
 };
 

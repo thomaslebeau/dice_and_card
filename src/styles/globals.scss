@@ -64,3 +64,31 @@ button {
   padding: $spacing-lg;
   text-align: center;
 }
+
+// ===================================
+// Focus global géré par FocusProvider
+// ===================================
+
+[data-focusable-id] {
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+[data-focused="true"] {
+  outline: 3px solid var(--color-focus, #00FFFF);
+  outline-offset: 3px;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+  z-index: 10;
+}
+
+// Styles spécifiques pour les boutons
+button[data-focused="true"] {
+  transform: scale(1.05);
+}
+
+// Styles spécifiques pour les cartes
+.selectableCard[data-focused="true"],
+.rewardCard[data-focused="true"] {
+  transform: translateY(-10px) scale(1.05);
+  box-shadow: 0 10px 40px rgba(0, 255, 255, 0.6);
+}

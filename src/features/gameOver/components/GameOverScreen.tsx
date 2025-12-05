@@ -1,6 +1,5 @@
 import React from "react";
-import { GameMenu } from "gaming-ui-a11y-toolkit";
-import type { MenuItem } from "@/types/game.types";
+import { useFocusable } from "gaming-ui-a11y-toolkit";
 import styles from "./GameOverScreen.module.scss";
 
 interface GameOverScreenProps {
@@ -17,26 +16,32 @@ export const GameOverScreen: React.FC<GameOverScreenProps> = ({
   combatNumber,
   onBackToMenu,
 }) => {
-  const gameActions: MenuItem[] = [
-    {
-      id: "menu",
-      label: "Retour au Menu",
-      icon: "↩️",
-      onSelect: onBackToMenu,
-    },
-  ];
+  const menuButton = useFocusable({
+    id: "gameover-menu-button",
+    onActivate: onBackToMenu,
+    autoFocus: true,
+  });
 
   return (
     <div className={styles.container}>
       <h2 className={styles.header}>
-        {victory ? "🏆 VICTOIRE ! 🏆" : "💀 DÉFAITE 💀"}
+        {victory ? "🎉 VICTOIRE TOTALE ! 🎉" : "💀 DÉFAITE... 💀"}
       </h2>
+
       <p className={styles.description}>
         {victory
-          ? `Félicitations ! Vous avez terminé les ${combatNumber} combats !`
-          : `Vous avez été vaincu au combat ${combatNumber}.`}
+          ? `Félicitations ! Vous avez vaincu tous les ennemis en ${combatNumber} combats !`
+          : `Vous avez été vaincu au combat ${combatNumber}...`}
       </p>
-      <GameMenu items={gameActions} enableHapticFeedback={true} />
+
+      <button
+        {...menuButton.focusProps}
+        className={`${styles.menuButton} ${
+          menuButton.isFocused ? styles.focused : ""
+        }`}
+      >
+        ↩️ Retour au Menu
+      </button>
     </div>
   );
 };
