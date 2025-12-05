@@ -1,10 +1,10 @@
-import React, { useCallback } from 'react';
-import { useGamepadNavigation } from 'gaming-ui-a11y-toolkit';
-import type { DeckSelectionScreenProps } from './DeckSelectionScreen.types';
-import { useDeckSelection } from '../hooks/useDeckSelection';
-import { CardDisplay } from '@shared/components/CardDisplay/CardDisplay';
-import { RARITY_COLORS } from '@shared/constants/cards';
-import styles from './DeckSelectionScreen.module.scss';
+import React, { useCallback } from "react";
+import { useGamepadNavigation } from "gaming-ui-a11y-toolkit";
+import type { DeckSelectionScreenProps } from "./DeckSelectionScreen.types";
+import { useDeckSelection } from "../hooks/useDeckSelection";
+import { CardDisplay } from "@shared/components/CardDisplay/CardDisplay";
+import { RARITY_COLORS } from "@shared/constants/cards";
+import styles from "./DeckSelectionScreen.module.scss";
 
 /**
  * Deck selection screen component
@@ -30,14 +30,12 @@ export const DeckSelectionScreen: React.FC<DeckSelectionScreenProps> = ({
   }, [canStartCombat, selectedCards, onDeckConfirmed]);
 
   // Gamepad navigation
-  const { focusedIndex, updateFocusedIndex } = useGamepadNavigation({
+  const { selectedIndex, setSelectedIndex } = useGamepadNavigation({
     itemCount: availableCards.length,
-    direction: 'horizontal',
+    direction: "horizontal",
     onConfirm: (index) => {
       toggleCardSelection(availableCards[index]);
     },
-    onBack: onBackToMenu,
-    onStart: handleStartCombat,
   });
 
   return (
@@ -53,7 +51,9 @@ export const DeckSelectionScreen: React.FC<DeckSelectionScreenProps> = ({
         </button>
         <h2 className={styles.title}>Acte 1</h2>
         <button
-          className={`${styles.startButton} ${!canStartCombat ? styles.disabled : ''}`}
+          className={`${styles.startButton} ${
+            !canStartCombat ? styles.disabled : ""
+          }`}
           onClick={handleStartCombat}
           disabled={!canStartCombat}
           aria-label="Commencer le combat"
@@ -76,33 +76,37 @@ export const DeckSelectionScreen: React.FC<DeckSelectionScreenProps> = ({
       <div className={styles.cardsContainer}>
         {availableCards.map((card, index) => {
           const selected = isCardSelected(card.id);
-          const focused = focusedIndex === index;
+          const focused = selectedIndex === index;
           const rarityColor = RARITY_COLORS[card.rarity];
 
           return (
             <div
               key={card.id}
-              className={`${styles.selectableCard} ${selected ? styles.selected : ''} ${focused ? styles.focused : ''}`}
+              className={`${styles.selectableCard} ${
+                selected ? styles.selected : ""
+              } ${focused ? styles.focused : ""}`}
               onClick={() => toggleCardSelection(card)}
-              onMouseEnter={() => updateFocusedIndex(index)}
+              onMouseEnter={() => setSelectedIndex(index)}
               style={{
-                borderColor: selected ? rarityColor : 'rgba(255, 255, 255, 0.2)',
+                borderColor: selected
+                  ? rarityColor
+                  : "rgba(255, 255, 255, 0.2)",
               }}
               role="button"
               tabIndex={0}
               aria-pressed={selected}
-              aria-label={`${card.name}, ${selected ? 'sélectionnée' : 'non sélectionnée'}`}
+              aria-label={`${card.name}, ${
+                selected ? "sélectionnée" : "non sélectionnée"
+              }`}
               onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
+                if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();
                   toggleCardSelection(card);
                 }
               }}
             >
               <CardDisplay card={card} />
-              {selected && (
-                <div className={styles.selectedIndicator}>✓</div>
-              )}
+              {selected && <div className={styles.selectedIndicator}>✓</div>}
             </div>
           );
         })}
@@ -110,7 +114,9 @@ export const DeckSelectionScreen: React.FC<DeckSelectionScreenProps> = ({
 
       {/* Gamepad hints */}
       <div className={styles.hints}>
-        <p>🎮 D-Pad/Stick: Naviguer | A: Sélectionner | B: Menu | Start: Combat</p>
+        <p>
+          🎮 D-Pad/Stick: Naviguer | A: Sélectionner | B: Menu | Start: Combat
+        </p>
         <p>⌨️ Clic/Entrée: Sélectionner | Échap: Menu</p>
       </div>
     </div>
