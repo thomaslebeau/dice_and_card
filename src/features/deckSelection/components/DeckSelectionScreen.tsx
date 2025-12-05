@@ -33,9 +33,12 @@ export const DeckSelectionScreen: React.FC<DeckSelectionScreenProps> = ({
   const { selectedIndex, setSelectedIndex } = useGamepadNavigation({
     itemCount: availableCards.length,
     direction: "horizontal",
-    onConfirm: (index) => {
+    onActivate: (index) => {
       toggleCardSelection(availableCards[index]);
     },
+    // onConfirm: (index) => {
+    //   toggleCardSelection(availableCards[index]);
+    // },
   });
 
   return (
