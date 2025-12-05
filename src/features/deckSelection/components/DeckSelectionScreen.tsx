@@ -47,6 +47,7 @@ export const DeckSelectionScreen: React.FC<DeckSelectionScreenProps> = ({
       <header className={styles.header}>
         <button
           {...menuButton.focusProps}
+          onClick={onBackToMenu}
           className={`${styles.menuButton} ${
             menuButton.isFocused ? styles.focused : ''
           }`}
@@ -59,6 +60,7 @@ export const DeckSelectionScreen: React.FC<DeckSelectionScreenProps> = ({
 
         <button
           {...startCombatButton.focusProps}
+          onClick={handleStartCombat}
           className={`${styles.startButton} ${
             !canStartCombat ? styles.disabled : ''
           } ${startCombatButton.isFocused ? styles.focused : ''}`}
@@ -131,6 +133,7 @@ const SelectableCard: React.FC<SelectableCardProps> = ({
   return (
     <div
       {...cardFocus.focusProps}
+      onClick={onToggle}
       className={`${styles.selectableCard} ${
         isSelected ? styles.selected : ''
       } ${cardFocus.isFocused ? styles.focused : ''}`}
