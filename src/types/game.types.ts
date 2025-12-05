@@ -10,13 +10,3 @@ export interface GameStateData {
   playerCard: Card | null;
   enemyCard: EnemyCard | null;
 }
-
-/**
- * Menu item structure for gaming-ui-a11y-toolkit
- */
-export interface MenuItem {
-  id: string;
-  label: string;
-  icon: string;
-  onSelect: () => void;
-}

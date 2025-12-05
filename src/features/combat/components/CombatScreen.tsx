@@ -1,11 +1,11 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import type { Card, EnemyCard } from "@/types/card.types";
 import type { CombatEndResult } from "@/types/combat.types";
+import { useFocusable } from "gaming-ui-a11y-toolkit";
 import { CardDisplay } from "@shared/components/CardDisplay/CardDisplay";
 import { DiceDisplay } from "@shared/components/DiceDisplay/DiceDisplay";
 import { useCombatLogic } from "../hooks/useCombatLogic";
 import styles from "./CombatScreen.module.scss";
-import { GameButton, useGamepadNavigation } from "gaming-ui-a11y-toolkit";
 
 interface CombatScreenProps {
   playerCard: Card;
@@ -36,28 +36,19 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
     handleNextRound,
   } = useCombatLogic({ playerCard, enemyCard, onCombatEnd });
 
-  const nextRoundButtonRef = useRef<HTMLButtonElement>(null);
-
-  useGamepadNavigation({
-    itemCount: 1,
-    onActivate: () => {
-      if (roundResolved && !combatFinished) {
-        handleNextRound();
-      }
-    },
-    enableHapticFeedback: true,
+  // Bouton "Round Suivant"
+  const nextRoundButton = useFocusable({
+    id: "combat-next-round",
+    onActivate: handleNextRound,
+    disabled: !roundResolved || combatFinished,
   });
 
+  // Auto-focus quand le bouton apparaît
   useEffect(() => {
-    if (roundResolved && !combatFinished && nextRoundButtonRef.current) {
-      // Petit délai pour laisser l'animation se finir
-      const timer = setTimeout(() => {
-        nextRoundButtonRef.current?.focus();
-      }, 100);
-
-      return () => clearTimeout(timer);
+    if (roundResolved && !combatFinished) {
+      nextRoundButton.focus();
     }
-  }, [roundResolved, combatFinished]);
+  }, [roundResolved, combatFinished, nextRoundButton]);
 
   return (
     <div className={styles.container}>
@@ -122,17 +113,14 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
           </div>
 
           {roundResolved && !combatFinished && (
-            <div className={styles.buttonContainer}>
-              <GameButton
-                ref={nextRoundButtonRef}
-                label="⚔️ Round Suivant"
-                onClick={handleNextRound}
-                variant="primary"
-                size="large"
-                enableHapticFeedback={true}
-                className={styles.nextRoundButton}
-              />
-            </div>
+            <button
+              {...nextRoundButton.focusProps}
+              className={`${styles.nextRoundButton} ${
+                nextRoundButton.isFocused ? styles.focused : ""
+              }`}
+            >
+              ⚔️ Round Suivant
+            </button>
           )}
 
           {combatFinished && (

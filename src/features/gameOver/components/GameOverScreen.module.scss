@@ -17,3 +17,19 @@
   font-size: 1.2em;
   margin: $spacing-lg 0;
 }
+
+.menuButton {
+  @include gaming-button($color-primary);
+  padding: $spacing-md $spacing-lg;
+  font-size: 1.2rem;
+  margin-top: $spacing-lg;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &.focused {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    outline: 3px solid $color-focus;
+    outline-offset: 3px;
+  }
+}
