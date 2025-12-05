@@ -14,15 +14,12 @@ export const useGameState = (): UseGameStateReturn => {
   const [currentCombat, setCurrentCombat] = useState(1);
   const [playerCard, setPlayerCard] = useState<Card | null>(null);
   const [enemyCard, setEnemyCard] = useState<ReturnType<typeof generateEnemy> | null>(null);
+  const [playerDeck, setPlayerDeck] = useState<Card[]>([]);
 
   const startNewRun = () => {
-    const startCard: Card = {
-      ...CARD_DATABASE[0],
-      currentHp: CARD_DATABASE[0].maxHp,
-    };
-    setPlayerCard(startCard);
+    // Navigate to deck selection instead of starting combat directly
+    setGameState(GameState.DECK_SELECTION);
     setCurrentCombat(1);
-    startCombat(startCard, 1);
   };
 
   const startCombat = (_pCard: Card, combatNum: number) => {
@@ -60,11 +57,19 @@ export const useGameState = (): UseGameStateReturn => {
     startCombat(updatedCard, nextCombat);
   };
 
+  const handleDeckConfirmed = (selectedCards: Card[]) => {
+    setPlayerDeck(selectedCards);
+    // First card of the deck becomes the active card for combat
+    setPlayerCard(selectedCards[0]);
+    startCombat(selectedCards[0], 1);
+  };
+
   const handleBackToMenu = () => {
     setGameState(GameState.MENU);
     setCurrentCombat(1);
     setPlayerCard(null);
     setEnemyCard(null);
+    setPlayerDeck([]);
   };
 
   return {
@@ -72,9 +77,11 @@ export const useGameState = (): UseGameStateReturn => {
     currentCombat,
     playerCard,
     enemyCard,
+    playerDeck,
     startNewRun,
     handleCombatEnd,
     handleCardSelected,
+    handleDeckConfirmed,
     handleBackToMenu,
   };
 };
