@@ -6,13 +6,13 @@ import styles from './CardDisplay.module.scss';
 /**
  * Card display component showing HP, stats, and rarity
  */
-export const CardDisplay: React.FC<CardDisplayProps> = ({ card, isPlayer: _isPlayer = false }) => {
+export const CardDisplay: React.FC<CardDisplayProps> = ({ card, isPlayer: _isPlayer = false, isDead = false }) => {
   const hpPercentage = (card.currentHp / card.maxHp) * 100;
   const rarityColor = RARITY_COLORS[card.rarity];
 
   return (
     <div
-      className={styles.cardDisplay}
+      className={`${styles.cardDisplay} ${isDead ? styles.dead : ''}`}
       style={{ borderColor: rarityColor }}
     >
       <div className={styles.cardName} style={{ color: rarityColor }}>

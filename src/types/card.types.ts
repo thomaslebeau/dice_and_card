@@ -34,4 +34,5 @@ export interface EnemyCard extends Card {
 export interface CardDisplayProps {
   card: Card;
   isPlayer?: boolean;
+  isDead?: boolean;
 }

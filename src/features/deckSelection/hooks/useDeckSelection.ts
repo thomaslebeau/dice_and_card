@@ -12,9 +12,11 @@ interface UseDeckSelectionReturn {
 
 export const useDeckSelection = (): UseDeckSelectionReturn => {
   // Les 5 premières cartes de la database sont disponibles
-  const availableCards = CARD_DATABASE.slice(0, 5).map(card => ({
+  const availableCards = CARD_DATABASE.slice(0, 5).map((card, index) => ({
     ...card,
     currentHp: card.maxHp,
+    // Marquer la première carte comme morte pour test
+    isDead: index === 0 ? true : false,
   }));
 
   const [selectedCards, setSelectedCards] = useState<Card[]>([]);
