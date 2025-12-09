@@ -7,6 +7,7 @@ interface UseDeckSelectionReturn {
   selectedCards: Card[];
   toggleCardSelection: (card: Card) => void;
   isCardSelected: (cardId: number) => boolean;
+  getSelectionOrder: (cardId: number) => number;
   canStartCombat: boolean;
 }
 
@@ -51,6 +52,17 @@ export const useDeckSelection = (): UseDeckSelectionReturn => {
   );
 
   /**
+   * Get selection order (1-based index) for a card, or 0 if not selected
+   */
+  const getSelectionOrder = useCallback(
+    (cardId: number): number => {
+      const index = selectedCards.findIndex(c => c.id === cardId);
+      return index === -1 ? 0 : index + 1; // 1-based index
+    },
+    [selectedCards]
+  );
+
+  /**
    * Can start combat only if exactly 5 cards are selected
    */
   const canStartCombat = selectedCards.length === 5;
@@ -60,6 +72,7 @@ export const useDeckSelection = (): UseDeckSelectionReturn => {
     selectedCards,
     toggleCardSelection,
     isCardSelected,
+    getSelectionOrder,
     canStartCombat,
   };
 };
