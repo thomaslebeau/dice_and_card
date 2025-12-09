@@ -1,10 +1,11 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useFocusable } from "gaming-ui-a11y-toolkit";
 import type { DeckSelectionScreenProps } from "./DeckSelectionScreen.types";
 import { useDeckSelection } from "../hooks/useDeckSelection";
 import { CardDisplay } from "@shared/components/CardDisplay/CardDisplay";
 import { RARITY_COLORS } from "@shared/constants/cards";
 import type { Card } from "@/types/card.types";
+import { useAliveCards } from "@shared/hooks/useAliveCards";
 import styles from "./DeckSelectionScreen.module.scss";
 
 export const DeckSelectionScreen: React.FC<DeckSelectionScreenProps> = ({
@@ -18,6 +19,9 @@ export const DeckSelectionScreen: React.FC<DeckSelectionScreenProps> = ({
     isCardSelected,
     canStartCombat,
   } = useDeckSelection();
+
+  // Hook pour gérer les cartes vivantes/mortes
+  const { aliveCardsCount, totalCards } = useAliveCards(availableCards);
 
   const handleStartCombat = useCallback(() => {
     if (canStartCombat) {
@@ -71,6 +75,13 @@ export const DeckSelectionScreen: React.FC<DeckSelectionScreenProps> = ({
         </button>
       </header>
 
+      {/* Compteur de cartes vivantes */}
+      <div className={styles.counter}>
+        <span className={styles.counterText}>
+          Cartes vivantes : {aliveCardsCount}/{totalCards}
+        </span>
+      </div>
+
       {/* Compteur de sélection */}
       <div className={styles.counter}>
         <span className={styles.counterText}>
@@ -122,6 +133,9 @@ const SelectableCard: React.FC<SelectableCardProps> = ({
   isSelected,
   onToggle,
 }) => {
+  const [isShaking, setIsShaking] = useState(false);
+  const isDead = card.isDead === true;
+
   const cardFocus = useFocusable({
     id: `deck-card-${card.id}`,
     group: "deck-cards",
@@ -130,25 +144,57 @@ const SelectableCard: React.FC<SelectableCardProps> = ({
 
   const rarityColor = RARITY_COLORS[card.rarity];
 
+  // Gestion du clic sur une carte morte
+  const handleClick = () => {
+    if (isDead) {
+      // Trigger animation shake
+      setIsShaking(true);
+      setTimeout(() => setIsShaking(false), 300);
+
+      // Feedback haptique (si disponible)
+      if (navigator.vibrate) {
+        navigator.vibrate([50, 30, 50]); // Pattern de vibration
+      }
+
+      return; // Empêcher la sélection
+    }
+
+    onToggle();
+  };
+
   return (
     <div
       {...cardFocus.focusProps}
-      onClick={onToggle}
+      onClick={handleClick}
       className={`${styles.selectableCard} ${
         isSelected ? styles.selected : ""
-      } ${cardFocus.isFocused ? styles.focused : ""}`}
+      } ${cardFocus.isFocused ? styles.focused : ""} ${
+        isDead ? styles.dead : ""
+      } ${isShaking ? styles.shake : ""}`}
       style={{
         borderColor: isSelected ? rarityColor : "rgba(255, 255, 255, 0.2)",
       }}
       aria-pressed={isSelected}
+      aria-disabled={isDead}
       aria-label={`${card.name}, ${
-        isSelected ? "sélectionnée" : "non sélectionnée"
+        isDead
+          ? "morte, ne peut pas être sélectionnée"
+          : isSelected
+          ? "sélectionnée"
+          : "non sélectionnée"
       }`}
     >
-      <CardDisplay card={card} />
+      <CardDisplay card={card} isDead={isDead} />
+
+      {/* Indicateur de carte morte */}
+      {isDead && (
+        <div className={styles.deadIndicator}>
+          <span className={styles.deadIcon}>❌ MORTE</span>
+        </div>
+      )}
 
       {/* Indicateur de sélection */}
-      {isSelected && (
+      {isSelected && !isDead && (
         <div className={styles.selectedIndicator}>
           <span className={styles.checkmark}>✓</span>
         </div>

@@ -168,6 +168,28 @@
   &.selected.focused {
     box-shadow: 0 8px 40px rgba(0, 255, 255, 0.7);
   }
+
+  // État mort (carte morte)
+  &.dead {
+    opacity: 0.5;
+    filter: grayscale(100%);
+    cursor: not-allowed;
+    pointer-events: auto; // Pour détecter les clics et déclencher le shake
+
+    &:hover {
+      opacity: 0.5;
+      transform: none;
+    }
+
+    &.focused {
+      outline-color: rgba(255, 0, 0, 0.5);
+    }
+  }
+
+  // Animation shake
+  &.shake {
+    animation: shake 0.3s ease-in-out;
+  }
 }
 
 @keyframes selectedPulse {
@@ -176,6 +198,18 @@
   }
   50% {
     box-shadow: 0 8px 40px rgba(0, 255, 255, 0.6);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-5px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(5px);
   }
 }
 
@@ -202,6 +236,30 @@
   font-size: 1.5em;
   color: white;
   font-weight: bold;
+}
+
+// ==================
+// Dead Indicator
+// ==================
+
+.deadIndicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.85);
+  padding: 12px 20px;
+  border-radius: $radius-md;
+  z-index: 10;
+  border: 2px solid rgba(255, 0, 0, 0.6);
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.4);
+}
+
+.deadIcon {
+  font-size: 1.2em;
+  color: #ff4444;
+  font-weight: bold;
+  text-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
 }
 
 // ==================

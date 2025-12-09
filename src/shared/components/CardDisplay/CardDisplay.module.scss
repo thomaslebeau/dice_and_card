@@ -15,6 +15,12 @@
     transform: translateY(-2px);
     box-shadow: $shadow-md;
   }
+
+  // État mort
+  &.dead {
+    opacity: 0.6;
+    filter: grayscale(80%);
+  }
 }
 
 .cardName {
