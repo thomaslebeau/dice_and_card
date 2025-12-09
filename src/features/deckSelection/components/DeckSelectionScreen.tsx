@@ -17,6 +17,7 @@ export const DeckSelectionScreen: React.FC<DeckSelectionScreenProps> = ({
     selectedCards,
     toggleCardSelection,
     isCardSelected,
+    getSelectionOrder,
     canStartCombat,
   } = useDeckSelection();
 
@@ -104,6 +105,7 @@ export const DeckSelectionScreen: React.FC<DeckSelectionScreenProps> = ({
             key={card.id}
             card={card}
             isSelected={isCardSelected(card.id)}
+            selectionOrder={getSelectionOrder(card.id)}
             onToggle={() => toggleCardSelection(card)}
           />
         ))}
@@ -125,12 +127,14 @@ export const DeckSelectionScreen: React.FC<DeckSelectionScreenProps> = ({
 interface SelectableCardProps {
   card: Card;
   isSelected: boolean;
+  selectionOrder: number; // 1-5 pour l'ordre de sélection, 0 si non sélectionnée
   onToggle: () => void;
 }
 
 const SelectableCard: React.FC<SelectableCardProps> = ({
   card,
   isSelected,
+  selectionOrder,
   onToggle,
 }) => {
   const [isShaking, setIsShaking] = useState(false);
@@ -193,10 +197,10 @@ const SelectableCard: React.FC<SelectableCardProps> = ({
         </div>
       )}
 
-      {/* Indicateur de sélection */}
+      {/* Indicateur de sélection avec ordre */}
       {isSelected && !isDead && (
         <div className={styles.selectedIndicator}>
-          <span className={styles.checkmark}>✓</span>
+          <span className={styles.selectionOrder}>{selectionOrder}</span>
         </div>
       )}
 
