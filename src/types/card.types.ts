@@ -18,6 +18,7 @@ export interface CardBase {
  */
 export interface Card extends CardBase {
   currentHp: number;
+  isDead?: boolean;
 }
 
 /**
