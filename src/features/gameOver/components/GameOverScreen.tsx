@@ -1,5 +1,5 @@
 import React from "react";
-import { useFocusable } from "gaming-ui-a11y-toolkit";
+import { useFocusable } from "@/external_lib";
 import styles from "./GameOverScreen.module.scss";
 
 interface GameOverScreenProps {

@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { useFocusable } from "gaming-ui-a11y-toolkit";
+import { useFocusable } from "@/external_lib";
 import type { DeckSelectionScreenProps } from "./DeckSelectionScreen.types";
 import { useDeckSelection } from "../hooks/useDeckSelection";
 import { CardDisplay } from "@shared/components/CardDisplay/CardDisplay";

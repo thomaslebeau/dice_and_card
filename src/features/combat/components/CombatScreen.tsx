@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import type { Card, EnemyCard } from "@/types/card.types";
 import type { CombatEndResult } from "@/types/combat.types";
-import { useFocusable } from "gaming-ui-a11y-toolkit";
+import { useFocusable } from "@/external_lib";
 import { CardDisplay } from "@shared/components/CardDisplay/CardDisplay";
 import { DiceDisplay } from "@shared/components/DiceDisplay/DiceDisplay";
 import { useCombatLogic } from "../hooks/useCombatLogic";

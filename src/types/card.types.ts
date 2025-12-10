@@ -19,6 +19,7 @@ export interface CardBase {
 export interface Card extends CardBase {
   currentHp: number;
   isDead?: boolean;
+  position?: number; // Combat order position (1-5)
 }
 
 /**

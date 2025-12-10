@@ -15,7 +15,7 @@ export const generateEnemy = (combatNumber: number): EnemyCard => {
   switch (combatNumber) {
     case 1:
       enemyPool = CARD_DATABASE.filter((c) => c.rarity === Rarity.COMMON);
-      hpMultiplier = 0.8;
+      hpMultiplier = 0.2;
       statBoost = 0;
       break;
 
@@ -23,7 +23,7 @@ export const generateEnemy = (combatNumber: number): EnemyCard => {
       enemyPool = CARD_DATABASE.filter(
         (c) => c.rarity === Rarity.COMMON || c.rarity === Rarity.UNCOMMON
       );
-      hpMultiplier = 1.0;
+      hpMultiplier = 0.5;
       statBoost = 0;
       break;
 
@@ -31,22 +31,22 @@ export const generateEnemy = (combatNumber: number): EnemyCard => {
       enemyPool = CARD_DATABASE.filter(
         (c) => c.rarity === Rarity.UNCOMMON || c.rarity === Rarity.RARE
       );
-      hpMultiplier = 1.1;
-      statBoost = 1;
+      hpMultiplier = 0.5;
+      statBoost = 0;
       break;
 
     case 4:
       enemyPool = CARD_DATABASE.filter(
         (c) => c.rarity === Rarity.RARE || c.rarity === Rarity.EPIC
       );
-      hpMultiplier = 1.2;
-      statBoost = 1;
+      hpMultiplier = 0.5;
+      statBoost = 0;
       break;
 
     case 5:
       enemyPool = CARD_DATABASE.filter((c) => c.rarity === Rarity.EPIC);
-      hpMultiplier = 1.5;
-      statBoost = 2;
+      hpMultiplier = 0.5;
+      statBoost = 0;
       isBoss = true;
       break;
 

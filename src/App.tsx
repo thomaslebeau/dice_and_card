@@ -1,6 +1,7 @@
 import React from "react";
-import { FocusProvider } from "gaming-ui-a11y-toolkit";
-import "gaming-ui-a11y-toolkit/style.css";
+// import { FocusProvider } from "./external_lib";
+import { FocusProvider } from "./external_lib";
+import "./external_lib/index.css";
 
 import { GameState } from "@enums/GameState.enum";
 import { MAX_COMBATS } from "@shared/constants/cards";
@@ -9,7 +10,7 @@ import { useGameState } from "@core/hooks/useGameState";
 import { MainMenu } from "@features/menu/components/MainMenu";
 import { DeckSelectionScreen } from "@features/deckSelection/components/DeckSelectionScreen";
 import { CombatScreen } from "@features/combat/components/CombatScreen";
-import { RewardScreen } from "@features/reward/components/RewardScreen";
+import { DeckManagementScreen } from "@features/deckManagement/components/DeckManagementScreen";
 import { GameOverScreen } from "@features/gameOver/components/GameOverScreen";
 
 import "@styles/globals.scss";
@@ -25,10 +26,11 @@ const App: React.FC = () => {
     currentCombat,
     playerCard,
     enemyCard,
+    playerDeck,
     startNewRun,
     handleDeckConfirmed,
     handleCombatEnd,
-    handleCardSelected,
+    handleDeckManagementConfirmed,
     handleBackToMenu,
   } = useGameState();
 
@@ -60,9 +62,10 @@ const App: React.FC = () => {
           />
         )}
 
-        {gameState === GameState.REWARD && (
-          <RewardScreen
-            onCardSelected={handleCardSelected}
+        {gameState === GameState.REWARD && playerDeck && (
+          <DeckManagementScreen
+            currentDeck={playerDeck}
+            onDeckConfirmed={handleDeckManagementConfirmed}
             combatNumber={currentCombat}
           />
         )}

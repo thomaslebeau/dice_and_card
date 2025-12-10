@@ -48,15 +48,21 @@ export const useGameState = (): UseGameStateReturn => {
   const handleDeckConfirmed = (selectedCards: Card[]) => {
     console.log('Deck confirmed:', selectedCards);
 
-    // Store the deck
-    setPlayerDeck(selectedCards);
+    // Assign positions 1-5 based on selection order
+    const deckWithPositions = selectedCards.map((card, index) => ({
+      ...card,
+      position: index + 1, // Position 1-5
+    }));
 
-    // The first card of the deck becomes the active card
-    setPlayerCard(selectedCards[0]);
+    // Store the deck
+    setPlayerDeck(deckWithPositions);
+
+    // The first card (position 1) becomes the active card
+    setPlayerCard(deckWithPositions[0]);
 
     // Start the first combat
     setCurrentCombat(1);
-    startCombat(selectedCards[0], 1);
+    startCombat(deckWithPositions[0], 1);
   };
 
   const startCombat = (_pCard: Card, combatNum: number) => {
@@ -87,18 +93,42 @@ export const useGameState = (): UseGameStateReturn => {
     }
   };
 
-  const handleCardSelected = (newCard: Card) => {
-    if (!playerCard) return;
+  /**
+   * Helper: Get next combat card by position
+   * Always selects the first ALIVE card by position order
+   * Position 1 fights first, if dead → Position 2, etc.
+   */
+  const getNextCombatCard = (deck: Card[]): Card | null => {
+    const aliveSortedCards = deck
+      .filter((c) => !c.isDead)
+      .sort((a, b) => (a.position || 0) - (b.position || 0));
 
-    const updatedCard: Card = {
-      ...newCard,
-      currentHp: playerCard.currentHp,
-    };
-    setPlayerCard(updatedCard);
+    return aliveSortedCards[0] || null;
+  };
+
+  /**
+   * Handler for deck management confirmation (post-combat)
+   * Transition: REWARD → COMBAT
+   */
+  const handleDeckManagementConfirmed = (updatedDeck: Card[]) => {
+    console.log('Deck management confirmed:', updatedDeck);
+
+    // Update the deck
+    setPlayerDeck(updatedDeck);
+
+    // Select the first alive card by position
+    const nextCard = getNextCombatCard(updatedDeck);
+
+    if (!nextCard) {
+      // No alive cards left
+      setGameState(GameState.GAMEOVER);
+      return;
+    }
 
     const nextCombat = currentCombat + 1;
+    setPlayerCard(nextCard);
     setCurrentCombat(nextCombat);
-    startCombat(updatedCard, nextCombat);
+    startCombat(nextCard, nextCombat);
   };
 
   const handleBackToMenu = () => {
@@ -129,7 +159,7 @@ export const useGameState = (): UseGameStateReturn => {
     startNewRun,
     handleDeckConfirmed,
     handleCombatEnd,
-    handleCardSelected,
+    handleDeckManagementConfirmed,
     handleBackToMenu,
     markCardAsDead,
   };

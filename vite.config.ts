@@ -15,6 +15,12 @@ export default defineConfig({
       '@features': resolve(__dirname, './src/features'),
       '@core': resolve(__dirname, './src/core'),
       '@styles': resolve(__dirname, './src/styles'),
+      'gaming-a11y-toolkit': resolve(__dirname, '../gaming_ui_a11y_toolkit/dist/'),
     }
+  },
+  optimizeDeps: {
+    // Exclure la librairie pour forcer Vite à la traiter comme du code source
+    // non optimisé (comme si c'était un fichier local)
+    exclude: ['gaming-a11y-toolkit'], 
   },
 })

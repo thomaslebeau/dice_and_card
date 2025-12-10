@@ -18,7 +18,7 @@ export interface UseGameStateReturn {
   startNewRun: () => void;
   handleDeckConfirmed: (selectedCards: Card[]) => void;
   handleCombatEnd: (result: CombatEndResult) => void;
-  handleCardSelected: (newCard: Card) => void;
+  handleDeckManagementConfirmed: (updatedDeck: Card[]) => void;
   handleBackToMenu: () => void;
   markCardAsDead: (cardId: number) => void;
 }

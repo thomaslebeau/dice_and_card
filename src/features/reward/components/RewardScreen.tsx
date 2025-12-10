@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import type { Card } from "@/types/card.types";
-import { useFocusable } from "gaming-ui-a11y-toolkit";
+import { useFocusable } from "@/external_lib";
 import { CARD_DATABASE, RARITY_COLORS } from "@shared/constants/cards";
 import { CardDisplay } from "@shared/components/CardDisplay/CardDisplay";
 import styles from "./RewardScreen.module.scss";
@@ -53,7 +53,11 @@ interface RewardCardProps {
   autoFocus?: boolean;
 }
 
-const RewardCard: React.FC<RewardCardProps> = ({ card, onSelect, autoFocus }) => {
+const RewardCard: React.FC<RewardCardProps> = ({
+  card,
+  onSelect,
+  autoFocus,
+}) => {
   const cardFocus = useFocusable({
     id: `reward-card-${card.id}`,
     group: "rewards",
