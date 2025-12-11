@@ -14,8 +14,15 @@ export const calculateCombatResult = (
   const enemyAttackTotal = diceResults.enemyAttack + enemyCard.attackMod;
   const enemyDefenseTotal = diceResults.enemyDefense + enemyCard.defenseMod;
 
-  const damageToEnemy = Math.max(0, playerAttackTotal - enemyDefenseTotal);
-  const damageToPlayer = Math.max(0, enemyAttackTotal - playerDefenseTotal);
+  // Damage to enemy
+  const playerRawDamage = playerAttackTotal;
+  const enemyReduction = Math.min(enemyDefenseTotal * 0.1, 0.6); // Max 60% reduction
+  const damageToEnemy = Math.max(1, Math.round(playerRawDamage * (1 - enemyReduction)));
+
+  // Damage to player
+  const enemyRawDamage = enemyAttackTotal;
+  const playerReduction = Math.min(playerDefenseTotal * 0.1, 0.6); // Max 60% reduction
+  const damageToPlayer = Math.max(1, Math.round(enemyRawDamage * (1 - playerReduction)));
 
   return {
     playerAttack: playerAttackTotal,
