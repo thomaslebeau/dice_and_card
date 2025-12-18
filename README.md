@@ -1,73 +1,122 @@
-# React + TypeScript + Vite
+# Dice and Card
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Un roguelike de deck-building avec combats au tour par tour dans un univers post-apocalyptique gothique industriel.
 
-Currently, two official plugins are available:
+## Vue d'ensemble
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Dice and Card est un jeu de stratégie où chaque carte de votre deck représente une vie. Les survivants forgent leurs armes dans les ruines urbaines d'un monde hostile. Chaque décision compte, car la mort est permanente.
 
-## React Compiler
+## Règles du jeu
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Système de Combat
 
-## Expanding the ESLint configuration
+Le combat utilise un système de réduction de dégâts en pourcentage :
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+**Formule :**
+```
+Dégâts finaux = Dégâts bruts × (1 - réduction)
+Réduction = défense × 10%
+Réduction maximum = 60%
+Dégâts minimum = 1 (garanti)
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+**Exemples de calcul :**
+- Attaque de 10 dégâts contre 2 de défense → 10 × (1 - 0.20) = **8 dégâts**
+- Attaque de 10 dégâts contre 4 de défense → 10 × (1 - 0.40) = **6 dégâts**
+- Attaque de 10 dégâts contre 6 de défense → 10 × (1 - 0.60) = **4 dégâts**
+- Attaque de 10 dégâts contre 8 de défense → 10 × (1 - 0.60) = **4 dégâts** (plafond à 60%)
+- Attaque de 1 dégât contre 6 de défense → **1 dégât** (minimum garanti)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Les combats durent en moyenne 8-12 rounds, rendant chaque affrontement dynamique.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Système de Draft
+
+- **Deck maximum** : 5 cartes
+- **Après une victoire** : 3 cartes vous sont proposées, vous en choisissez 1
+- **Si votre deck a 5 cartes** : vous devez remplacer une carte existante
+- **Si votre deck a moins de 5 cartes** : la carte est ajoutée directement
+- Chaque carte se voit assigner une position de combat (1 à 5)
+
+### Règles de Mort
+
+- **Vos cartes = vos vies**
+- Quand une carte meurt en combat, elle **disparaît définitivement** de votre deck
+- **Game Over** : toutes vos cartes sont mortes
+- **Après une défaite** : retour à l'écran de sélection avec vos cartes restantes
+
+### Adversaire
+
+L'adversaire est révélé **APRÈS** que vous ayez sélectionné votre carte. Vous jouez à l'aveugle, ce qui rend le reroll critique pour s'adapter à la situation.
+
+## Flow d'un run
+
 ```
+Menu principal
+    ↓
+Sélection initiale du deck
+    ↓
+    ┌─────────────────┐
+    │     Combat      │
+    └─────────────────┘
+         ↓         ↓
+      Victoire   Défaite
+         ↓         ↓
+      Draft    Retour à sélection
+         ↓      (cartes restantes)
+    Prochain         ↓
+     combat      Game Over ?
+         ↓            ↓
+        ...        Fin
+```
+
+## Stack technique
+
+- **React 19** + **TypeScript**
+- **Vite** (avec Rolldown)
+- **React Three Fiber** + **Three.js** pour le rendu 3D
+- **SASS** pour le styling
+- Architecture organisée par features
+
+## Architecture du projet
+
+```
+src/
+├── core/              # État global du jeu (hooks, types)
+├── features/          # Écrans organisés par fonctionnalité
+│   ├── combat/        # Écran de combat
+│   ├── deckSelection/ # Sélection des cartes
+│   ├── deckManagement/# Gestion du deck (remplacement)
+│   ├── reward/        # Écran de draft après victoire
+│   ├── gameOver/      # Game Over
+│   └── menu/          # Menu principal
+├── shared/            # Composants et utilitaires réutilisables
+│   ├── components/    # CardDisplay, DiceDisplay, etc.
+│   ├── constants/     # Cartes et dés disponibles
+│   ├── utils/         # Calculs de combat, génération d'ennemis
+│   └── hooks/         # Hooks partagés
+├── external_lib/      # Système de navigation gamepad interne
+├── types/             # Définitions TypeScript globales
+└── enums/             # Énumérations (GameState, Rarity)
+```
+
+## Démarrage
+
+```bash
+npm install
+npm run dev
+```
+
+Pour build :
+```bash
+npm run build
+```
+
+## Public cible
+
+- Fans de roguelikes (Dead Cells, Hades)
+- Joueurs de deck-builders (Slay the Spire, Monster Train)
+- Amateurs de jeux de stratégie au tour par tour
+
+## Licence
+
+À définir
