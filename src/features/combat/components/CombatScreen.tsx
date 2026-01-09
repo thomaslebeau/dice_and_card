@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import type { Card, EnemyCard } from "@/types/card.types";
 import type { CombatEndResult } from "@/types/combat.types";
 import { useFocusable } from "@/external_lib";
@@ -8,21 +8,36 @@ import { useCombatLogic } from "../hooks/useCombatLogic";
 import styles from "./CombatScreen.module.scss";
 
 interface CombatScreenProps {
-  playerCard: Card;
+  playerDeck: Card[];
   enemyCard: EnemyCard;
   onCombatEnd: (result: CombatEndResult) => void;
   combatNumber: number;
 }
 
 /**
- * Combat screen with dice rolling and round-by-round combat
+ * Combat screen with drag and drop card combat
  */
 export const CombatScreen: React.FC<CombatScreenProps> = ({
-  playerCard,
+  playerDeck,
   enemyCard,
   onCombatEnd,
   combatNumber,
 }) => {
+  const [selectedCard, setSelectedCard] = useState<Card | null>(null);
+  const [draggedCard, setDraggedCard] = useState<Card | null>(null);
+  const [isDropZoneActive, setIsDropZoneActive] = useState(false);
+  const [combatStarted, setCombatStarted] = useState(false);
+
+  // Get alive cards
+  const aliveCards = playerDeck.filter(card => !card.isDead);
+
+  // Only initialize combat logic when a card is selected
+  const combatLogic = useCombatLogic({
+    playerCard: selectedCard || aliveCards[0],
+    enemyCard,
+    onCombatEnd
+  });
+
   const {
     roundNumber,
     diceKey,
@@ -34,7 +49,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
     currentEnemyCard,
     combatResult,
     handleNextRound,
-  } = useCombatLogic({ playerCard, enemyCard, onCombatEnd });
+  } = combatLogic;
 
   // Bouton "Round Suivant"
   const nextRoundButton = useFocusable({
@@ -50,15 +65,73 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
     }
   }, [roundResolved, combatFinished, nextRoundButton]);
 
+  // Start combat automatically with first alive card if none selected
+  useEffect(() => {
+    if (!combatStarted && aliveCards.length > 0 && !selectedCard) {
+      setSelectedCard(aliveCards[0]);
+      setCombatStarted(true);
+    }
+  }, [combatStarted, aliveCards, selectedCard]);
+
+  // Drag handlers
+  const handleDragStart = (card: Card) => {
+    if (!card.isDead) {
+      setDraggedCard(card);
+    }
+  };
+
+  const handleDragEnd = () => {
+    setDraggedCard(null);
+    setIsDropZoneActive(false);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    if (draggedCard && !combatFinished) {
+      setIsDropZoneActive(true);
+    }
+  };
+
+  const handleDragLeave = () => {
+    setIsDropZoneActive(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDropZoneActive(false);
+
+    if (draggedCard && !draggedCard.isDead && !combatFinished && roundResolved) {
+      setSelectedCard(draggedCard);
+      setCombatStarted(true);
+      // Reset for next round with new card
+      handleNextRound();
+    }
+  };
+
   return (
     <div className={styles.container}>
       <h2 className={styles.header}>
         ⚔️ Combat #{combatNumber} - Round {roundNumber} ⚔️
       </h2>
 
-      <div className={styles.cardsContainer}>
-        <CardDisplay card={currentPlayerCard} isPlayer={true} />
+      {/* Enemy card in the center */}
+      <div
+        className={`${styles.enemyZone} ${isDropZoneActive ? styles.dropZoneActive : ''}`}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+      >
         <CardDisplay card={currentEnemyCard} isPlayer={false} />
+        {isDropZoneActive && (
+          <div className={styles.dropIndicator}>
+            ⚔️ Déposez votre carte ici pour attaquer !
+          </div>
+        )}
+        {roundResolved && !combatFinished && !isDropZoneActive && (
+          <div className={styles.waitingIndicator}>
+            👇 Glissez une carte pour continuer le combat
+          </div>
+        )}
       </div>
 
       <DiceDisplay results={diceResults} diceKey={diceKey} />
@@ -132,6 +205,21 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
           )}
         </div>
       )}
+
+      {/* Player deck at the bottom */}
+      <div className={styles.playerDeck}>
+        {playerDeck.map((card, index) => (
+          <div
+            key={`${card.id}-${index}`}
+            className={`${styles.deckCard} ${card.isDead ? styles.deadCard : ''} ${draggedCard?.id === card.id ? styles.dragging : ''}`}
+            draggable={!card.isDead}
+            onDragStart={() => handleDragStart(card)}
+            onDragEnd={handleDragEnd}
+          >
+            <CardDisplay card={card} isPlayer={true} isDead={card.isDead} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

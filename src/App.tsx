@@ -55,9 +55,9 @@ const App: React.FC = () => {
           />
         )}
 
-        {gameState === GameState.COMBAT && playerCard && enemyCard && (
+        {gameState === GameState.COMBAT && playerDeck.length > 0 && enemyCard && (
           <CombatScreen
-            playerCard={playerCard}
+            playerDeck={playerDeck}
             enemyCard={enemyCard}
             onCombatEnd={handleCombatEnd}
             combatNumber={currentCombat}
