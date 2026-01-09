@@ -1,5 +1,5 @@
-@use '@styles/variables/colors' as *;
-@use '@styles/variables/spacing' as *;
+@use "@styles/variables/colors" as *;
+@use "@styles/variables/spacing" as *;
 
 .gameScreen {
   min-height: 100vh;
@@ -9,9 +9,8 @@
   justify-content: center;
   background-color: $color-background;
   color: $color-text;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   text-align: center;
-  padding: $spacing-lg;
 }
 
 .title {

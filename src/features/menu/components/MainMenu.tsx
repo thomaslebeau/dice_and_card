@@ -25,8 +25,6 @@ export const MainMenu: React.FC<MainMenuProps> = ({ startNewRun }) => {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>Menu Principal</h2>
-
       <div className={styles.menuItems}>
         <button
           {...startButton.focusProps}

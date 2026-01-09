@@ -42,7 +42,9 @@ const App: React.FC = () => {
       navigationDelay={150}
     >
       <div className={styles.gameScreen}>
-        <h1 className={styles.title}>Dice and Card</h1>
+        {gameState === GameState.MENU && (
+          <h1 className={styles.title}>Dice and Card</h1>
+        )}
 
         {gameState === GameState.MENU && <MainMenu startNewRun={startNewRun} />}
 

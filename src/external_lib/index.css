@@ -1,5 +1,5 @@
 /* Import design tokens */
-@import './styles/tokens.css';
+@import "./styles/tokens.css";
 
 :root {
   font-family: var(--font-family-base);
@@ -23,14 +23,6 @@ a {
 }
 a:hover {
   color: var(--color-primary-hover);
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
 }
 
 h1 {
