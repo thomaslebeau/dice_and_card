@@ -43,7 +43,7 @@ export const useGameState = (): UseGameStateReturn => {
 
   /**
    * Handler for deck confirmation (5 cards)
-   * Transition: DECK_SELECTION → COMBAT
+   * Transition: DECK_SELECTION → MENU
    */
   const handleDeckConfirmed = (selectedCards: Card[]) => {
     console.log('Deck confirmed:', selectedCards);
@@ -57,12 +57,8 @@ export const useGameState = (): UseGameStateReturn => {
     // Store the deck
     setPlayerDeck(deckWithPositions);
 
-    // The first card (position 1) becomes the active card
-    setPlayerCard(deckWithPositions[0]);
-
-    // Start the first combat
-    setCurrentCombat(1);
-    startCombat(deckWithPositions[0], 1);
+    // Return to menu after deck selection
+    setGameState(GameState.MENU);
   };
 
   const startCombat = (_pCard: Card, combatNum: number) => {
