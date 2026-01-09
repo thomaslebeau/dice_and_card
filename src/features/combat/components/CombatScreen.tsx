@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import type { Card, EnemyCard } from "@/types/card.types";
 import type { CombatEndResult } from "@/types/combat.types";
 import { useFocusable } from "@/external_lib";
@@ -8,20 +8,31 @@ import { useCombatLogic } from "../hooks/useCombatLogic";
 import styles from "./CombatScreen.module.scss";
 
 interface CombatScreenProps {
-  playerCard: Card;
+  playerDeck: Card[];
   enemyCard: EnemyCard;
   onCombatEnd: (result: CombatEndResult) => void;
   combatNumber: number;
 }
 
 /**
- * Combat screen with dice rolling and round-by-round combat
+ * Combat screen with drag and drop card combat
  */
-export const CombatScreen: React.FC<CombatScreenProps> = ({
-  playerCard,
+interface CombatWrapperProps {
+  selectedCard: Card;
+  enemyCard: EnemyCard;
+  onCombatEnd: (result: CombatEndResult) => void;
+  combatNumber: number;
+  onRoundResolved: (resolved: boolean) => void;
+  onCombatFinished: (finished: boolean) => void;
+}
+
+const CombatWrapper: React.FC<CombatWrapperProps> = ({
+  selectedCard,
   enemyCard,
   onCombatEnd,
   combatNumber,
+  onRoundResolved,
+  onCombatFinished,
 }) => {
   const {
     roundNumber,
@@ -34,16 +45,27 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
     currentEnemyCard,
     combatResult,
     handleNextRound,
-  } = useCombatLogic({ playerCard, enemyCard, onCombatEnd });
+  } = useCombatLogic({
+    playerCard: selectedCard,
+    enemyCard,
+    onCombatEnd
+  });
 
-  // Bouton "Round Suivant"
+  // Notify parent of state changes
+  useEffect(() => {
+    onRoundResolved(roundResolved);
+  }, [roundResolved, onRoundResolved]);
+
+  useEffect(() => {
+    onCombatFinished(combatFinished);
+  }, [combatFinished, onCombatFinished]);
+
   const nextRoundButton = useFocusable({
     id: "combat-next-round",
     onActivate: handleNextRound,
     disabled: !roundResolved || combatFinished,
   });
 
-  // Auto-focus quand le bouton apparaît
   useEffect(() => {
     if (roundResolved && !combatFinished) {
       nextRoundButton.focus();
@@ -51,15 +73,10 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
   }, [roundResolved, combatFinished, nextRoundButton]);
 
   return (
-    <div className={styles.container}>
+    <>
       <h2 className={styles.header}>
         ⚔️ Combat #{combatNumber} - Round {roundNumber} ⚔️
       </h2>
-
-      <div className={styles.cardsContainer}>
-        <CardDisplay card={currentPlayerCard} isPlayer={true} />
-        <CardDisplay card={currentEnemyCard} isPlayer={false} />
-      </div>
 
       <DiceDisplay results={diceResults} diceKey={diceKey} />
 
@@ -132,6 +149,111 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
           )}
         </div>
       )}
+    </>
+  );
+};
+
+export const CombatScreen: React.FC<CombatScreenProps> = ({
+  playerDeck,
+  enemyCard,
+  onCombatEnd,
+  combatNumber,
+}) => {
+  const [selectedCard, setSelectedCard] = useState<Card | null>(null);
+  const [draggedCard, setDraggedCard] = useState<Card | null>(null);
+  const [isDropZoneActive, setIsDropZoneActive] = useState(false);
+  const [roundResolved, setRoundResolved] = useState(false);
+  const [combatFinished, setCombatFinished] = useState(false);
+
+  // Get alive cards
+  const aliveCards = playerDeck.filter(card => !card.isDead);
+
+  // Drag handlers
+  const handleDragStart = (card: Card) => {
+    if (!card.isDead) {
+      setDraggedCard(card);
+    }
+  };
+
+  const handleDragEnd = () => {
+    setDraggedCard(null);
+    setIsDropZoneActive(false);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    if (draggedCard && !combatFinished) {
+      setIsDropZoneActive(true);
+    }
+  };
+
+  const handleDragLeave = () => {
+    setIsDropZoneActive(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDropZoneActive(false);
+
+    if (draggedCard && !draggedCard.isDead && !combatFinished) {
+      // First card selection or changing card for next round
+      setSelectedCard(draggedCard);
+    }
+  };
+
+  return (
+    <div className={styles.container}>
+      {/* Enemy card in the center */}
+      <div
+        className={`${styles.enemyZone} ${isDropZoneActive ? styles.dropZoneActive : ''}`}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+      >
+        <CardDisplay card={enemyCard} isPlayer={false} />
+        {isDropZoneActive && (
+          <div className={styles.dropIndicator}>
+            ⚔️ Déposez votre carte ici pour attaquer !
+          </div>
+        )}
+        {!selectedCard && !isDropZoneActive && (
+          <div className={styles.waitingIndicator}>
+            👆 Glissez une carte pour commencer le combat
+          </div>
+        )}
+        {selectedCard && roundResolved && !combatFinished && !isDropZoneActive && (
+          <div className={styles.waitingIndicator}>
+            👇 Glissez une carte pour continuer le combat
+          </div>
+        )}
+      </div>
+
+      {selectedCard && (
+        <CombatWrapper
+          key={selectedCard.id}
+          selectedCard={selectedCard}
+          enemyCard={enemyCard}
+          onCombatEnd={onCombatEnd}
+          combatNumber={combatNumber}
+          onRoundResolved={setRoundResolved}
+          onCombatFinished={setCombatFinished}
+        />
+      )}
+
+      {/* Player deck at the bottom */}
+      <div className={styles.playerDeck}>
+        {playerDeck.map((card, index) => (
+          <div
+            key={`${card.id}-${index}`}
+            className={`${styles.deckCard} ${card.isDead ? styles.deadCard : ''} ${draggedCard?.id === card.id ? styles.dragging : ''}`}
+            draggable={!card.isDead}
+            onDragStart={() => handleDragStart(card)}
+            onDragEnd={handleDragEnd}
+          >
+            <CardDisplay card={card} isPlayer={true} isDead={card.isDead} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
